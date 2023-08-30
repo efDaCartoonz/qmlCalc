@@ -1,18 +1,22 @@
-import QtQuick 2.7
+import QtQuick 2.5
+import QtQuick.Controls 1.4
+import QtQuick.Layouts 1.1
 
-Rectangle {
-    property alias mouseArea: mouseArea
-
+Item {
     width: 360
     height: 360
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-    }
+    property alias btnNum1: btnNum1
+    property alias btnNum2: btnNum2
 
-    Text {
+    RowLayout {
         anchors.centerIn: parent
-        text: "Hello World"
+
+        Button {
+            id: btnNum1
+        }
+        Button {
+            id: btnNum2
+        }
     }
 }
