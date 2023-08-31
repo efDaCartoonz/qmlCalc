@@ -5,18 +5,18 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 
-Window {
+ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    x: winX
+    y: winY
+    width: winWidth
+    height: winHeight
     title: qsTr("Калькулятор")
     Connections {
         target: appCore
 
-        onSendToQml: {
-            lblCount.text = count
-        }
     }
+
     property int sizeSeparatorHorizontal: 4
     property int sizeSeparatorVertical: 4
     property int sizeCalcButtonHeight: 40
@@ -31,9 +31,12 @@ Window {
     property int sizeWidgetBorder: 1
     property string colorWidgetBorder: "#000000"
 
+    onClosing: {
+        appCore.saveWindowSize(width, height)
+        appCore.saveWindowPosition(x, y)
+    }
+
     MainForm {
-
-
         anchors.fill: parent
         Rectangle {
             id: verticalSeparator0
