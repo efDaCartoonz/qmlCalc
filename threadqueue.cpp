@@ -22,13 +22,14 @@ void ThreadQueue::whenAddNewSymbol(QString symbol) {
         if (listOperations->length() > 0 and listOperations->length() == listOperands->length() - 1) {
             AppCore *appCore = static_cast <AppCore *> (this->parent);
             int queueCount = 0;
+            expressionValue = QString("%1:%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"), expressionValue);
             mutex->lock();
             appCore->queueRequest.append(expressionValue);
             appCore->mapOperands.insert(expressionValue, listOperands);
             appCore->mapOperations.insert(expressionValue, listOperations);
             queueCount = appCore->queueRequest.length();
             mutex->unlock();
-            emit showExpressionMessage(QString("Выражение %1 добавлено в очередь").arg(expressionValue));
+            emit showExpressionMessage(QString("Выражение %1 добавлено в очередь").arg(expressionValue.split(":").at(1)));
             emit showExpressionCount(queueCount);
             listOperands = new QList <double>;
             listOperations = new QList <int>;

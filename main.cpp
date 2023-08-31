@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     context->setContextProperty("winHeight", settings->value("window/height", 480));
     context->setContextProperty("winX", settings->value("window/x", 0));
     context->setContextProperty("winY", settings->value("window/y", 0));
-    context->setContextProperty("calcInterval", settings->value("calc/interval", 10000));
+    context->setContextProperty("calcInterval", settings->value("calc/interval", 10));
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

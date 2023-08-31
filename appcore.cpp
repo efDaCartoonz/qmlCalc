@@ -25,7 +25,6 @@ AppCore::AppCore(QObject *parent, QSettings *settings) : QObject(parent) {
     threadCalc = new ThreadCalc(this, mutex);
     connect(threadCalcHelper, SIGNAL(started()), threadCalc, SLOT(run()));
     connect(threadCalc, SIGNAL(finished()), threadCalcHelper, SLOT(terminate()));
-    connect(this, SIGNAL(sendCalcInterval(int)), threadCalc, SLOT(whenNeedChangeInterval(int)));
     connect(threadCalc, SIGNAL(showResultCount(int)), SLOT(whenNeedShowResultCount(int)));
     connect(threadCalc, SIGNAL(showExpressionCount(int)), SLOT(whenNeedShowExpressionCount(int)));
     connect(timer, SIGNAL(timeout()), threadCalc, SLOT(whenTimerTimeout()));
@@ -98,14 +97,14 @@ void AppCore::whenNeedShowResultCount(int count) {
     emit showResultQueueCount(count);
     QString expression = queueResult.first();
     if (mapErrorResults.keys().contains(expression)) {
-        emit showError(QString("При вычислении %1 возникла ошибка: %2").arg(expression, mapErrorResults.value(expression)));
+        emit showError(QString("При вычислении %1 возникла ошибка: %2").arg(expression.split(":").at(1), mapErrorResults.value(expression)));
         mapErrorResults.remove(expression);
     }
     else if (mapSuccessResults.keys().contains(expression)) {
-        emit showExpressionResult(QString("%1 = %2").arg(expression, QString::number(mapSuccessResults.value(expression))));
+        emit showExpressionResult(QString("%1 = %2").arg(expression.split(":").at(1), QString::number(mapSuccessResults.value(expression))));
         mapSuccessResults.remove(expression);
     }
     queueResult.removeFirst();
-    emit showRequestQueueCount(queueResult.length());
+    emit showResultQueueCount(queueResult.length());
 }
 

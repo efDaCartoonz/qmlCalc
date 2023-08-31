@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QMap>
+#include <QDateTime>
 #include "calculator.h"
 
 class ThreadQueue : public QThread

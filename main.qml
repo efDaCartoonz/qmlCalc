@@ -18,13 +18,13 @@ ApplicationWindow {
             editExpression.text = value
         }
         onShowError: {
-            textPrintLog.append("<p style='color: #f00'>" + message + "</p>")
+            textPrintLog.append("<p style='color: #f00; line-height:80%'>" + message + "</p>")
         }
         onShowExpression: {
-            textPrintLog.append("<p style='color: #00f'>" + message + "</p>")
+            textPrintLog.append("<p style='color: #00f; line-height:80%'>" + message + "</p>")
         }
         onShowExpressionResult: {
-            textPrintLog.append("<p style='color: #0f0'>" + message + "</p>")
+            textPrintLog.append("<p style='color: #090; line-height:80%'>" + message + "</p>")
         }
         onShowRequestQueueCount: {
             countQueueReq.text = count
