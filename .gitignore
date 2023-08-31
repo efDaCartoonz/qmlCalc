@@ -3,3 +3,6 @@
 Makefile*
 *pro.user
 .qmake*
+*.autosave
+*.Debug
+*.Release

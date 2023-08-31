@@ -14,7 +14,24 @@ ApplicationWindow {
     title: qsTr("Калькулятор")
     Connections {
         target: appCore
-
+        onShowExpressionValue: {
+            editExpression.text = value
+        }
+        onShowError: {
+            textPrintLog.append("<p style='color: #f00'>" + message + "</p>")
+        }
+        onShowExpression: {
+            textPrintLog.append("<p style='color: #00f'>" + message + "</p>")
+        }
+        onShowExpressionResult: {
+            textPrintLog.append("<p style='color: #0f0'>" + message + "</p>")
+        }
+        onShowRequestQueueCount: {
+            countQueueReq.text = count
+        }
+        onShowResultQueueCount: {
+            countQueueRes.text = count
+        }
     }
 
     property int sizeSeparatorHorizontal: 4
@@ -30,6 +47,9 @@ ApplicationWindow {
 
     property int sizeWidgetBorder: 1
     property string colorWidgetBorder: "#000000"
+
+    property bool isUnexceptInputSymbol: false
+    property bool isExpressionClear: false
 
     onClosing: {
         appCore.saveWindowSize(width, height)
@@ -71,7 +91,6 @@ ApplicationWindow {
                         border.color: colorWidgetBorder
                     }
                 }
-
             }
             Rectangle {
                 width: sizeSeparatorHorizontal
@@ -112,9 +131,83 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
             }
         }
-
         Rectangle {
             id: verticalSeparator2
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: rowClear.top
+            height: sizeSeparatorVertical
+        }
+        Row {
+            id: rowClear
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: verticalSeparator3.top
+            height: sizeCalcButtonHeight
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+            Button {
+                id: btnDelete
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: (parent.width - sizeSeparatorHorizontal * 3) / 2
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: control.pressed ? colorBtnPressed : colorBtnNormal
+                        border.width: sizeWidgetBorder
+                        border.color: colorWidgetBorder
+                    }
+                    label: Text {
+                        text: qsTr("C")
+                        color: colorBtnFont
+                        font.pointSize: 14
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+                }
+                onClicked: {
+                    appCore.whenDeleteLastSymbol()
+                }
+            }
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+            Button {
+                id: btnClear
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: (parent.width - sizeSeparatorHorizontal * 3) / 2
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: control.pressed ? colorBtnPressed : colorBtnNormal
+                        border.width: sizeWidgetBorder
+                        border.color: colorWidgetBorder
+                    }
+                    label: Text {
+                        text: qsTr("CE")
+                        color: colorBtnFont
+                        font.pointSize: 14
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+                }
+                onClicked: {
+                    appCore.whenClearExpression()
+                }
+            }
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+        }
+        Rectangle {
+            id: verticalSeparator3
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: row0.top
@@ -125,7 +218,7 @@ ApplicationWindow {
             height: sizeCalcButtonHeight
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: verticalSeparator3.top
+            anchors.bottom: verticalSeparator4.top
             Rectangle {
                 width: sizeSeparatorHorizontal
                 anchors.top: parent.top
@@ -151,7 +244,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "1"
+
+                    appCore.whenAddNewSymbol("1")
                 }
             }
             Rectangle {
@@ -179,7 +273,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "2"
+
+                    appCore.whenAddNewSymbol("2")
                 }
             }
             Rectangle {
@@ -207,7 +302,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "3"
+
+                    appCore.whenAddNewSymbol("3")
                 }
             }
             Rectangle {
@@ -235,7 +331,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    textPrintLog.append("<p style='color:#FF0000;'>Red</p>")
+
+                    appCore.whenAddNewSymbol("+")
                 }
             }
             Rectangle {
@@ -245,7 +342,7 @@ ApplicationWindow {
             }
         }
         Rectangle {
-            id: verticalSeparator3
+            id: verticalSeparator4
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: row1.top
@@ -256,7 +353,7 @@ ApplicationWindow {
             height: sizeCalcButtonHeight
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: verticalSeparator4.top
+            anchors.bottom: verticalSeparator5.top
             Rectangle {
                 width: sizeSeparatorHorizontal
                 anchors.top: parent.top
@@ -282,7 +379,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "4"
+
+                    appCore.whenAddNewSymbol("4")
                 }
             }
             Rectangle {
@@ -310,7 +408,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "5"
+
+                    appCore.whenAddNewSymbol("5")
                 }
             }
             Rectangle {
@@ -338,7 +437,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "6"
+
+                    appCore.whenAddNewSymbol("6")
                 }
             }
             Rectangle {
@@ -366,7 +466,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    textPrintLog.append("<p style='color: #0f0'>Green</p>")
+
+                    appCore.whenAddNewSymbol("-")
                 }
             }
             Rectangle {
@@ -376,7 +477,7 @@ ApplicationWindow {
             }
         }
         Rectangle {
-            id: verticalSeparator4
+            id: verticalSeparator5
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: row2.top
@@ -387,7 +488,7 @@ ApplicationWindow {
             height: sizeCalcButtonHeight
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: verticalSeparator5.top
+            anchors.bottom: verticalSeparator6.top
             Rectangle {
                 width: sizeSeparatorHorizontal
                 anchors.top: parent.top
@@ -413,7 +514,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "7"
+
+                    appCore.whenAddNewSymbol("7")
                 }
             }
             Rectangle {
@@ -441,7 +543,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "8"
+
+                    appCore.whenAddNewSymbol("8")
                 }
             }
             Rectangle {
@@ -469,7 +572,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "9"
+
+                    appCore.whenAddNewSymbol("9")
                 }
             }
             Rectangle {
@@ -497,7 +601,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    textPrintLog.append("<p style='color: #00f'>Blue</p>")
+
+                    appCore.whenAddNewSymbol("*")
                 }
             }
             Rectangle {
@@ -507,7 +612,7 @@ ApplicationWindow {
             }
         }
         Rectangle {
-            id: verticalSeparator5
+            id: verticalSeparator6
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: row3.top
@@ -518,7 +623,7 @@ ApplicationWindow {
             height: sizeCalcButtonHeight
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: verticalSeparator6.top
+            anchors.bottom: verticalSeparator7.top
             Rectangle {
                 width: sizeSeparatorHorizontal
                 anchors.top: parent.top
@@ -544,7 +649,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "."
+
+                    appCore.whenAddNewSymbol(".")
                 }
             }
             Rectangle {
@@ -572,7 +678,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text += "0"
+
+                    appCore.whenAddNewSymbol("0")
                 }
             }
             Rectangle {
@@ -600,7 +707,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    editExpression.text = ""
+
+                    appCore.whenAddNewSymbol("=")
                 }
             }
             Rectangle {
@@ -628,7 +736,8 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    textPrintLog.append("<p style='color: #999'>Gray</p>")
+
+                    appCore.whenAddNewSymbol("/")
                 }
             }
             Rectangle {
@@ -638,23 +747,23 @@ ApplicationWindow {
             }
         }
         Rectangle {
-            id: verticalSeparator6
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: verticalSeparator7.top
-            height: sizeSeparatorVertical
-        }
-        Rectangle {
             id: verticalSeparator7
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: verticalSeparator8.top
+            height: sizeSeparatorVertical
+        }
+        Rectangle {
+            id: verticalSeparator8
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: verticalSeparator9.top
             height: 1
             width: parent.width
             color: colorWidgetBorder
         }
         Rectangle {
-            id: verticalSeparator8
+            id: verticalSeparator9
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: rowSetCalcTime.top
@@ -664,21 +773,25 @@ ApplicationWindow {
             id: rowSetCalcTime
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: verticalSeparator9.top
+            anchors.bottom: verticalSeparator10.top
             height: sizeSetCalcTimeRow
             Rectangle {
                 width: sizeSeparatorHorizontal
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
             }
-            Label {
-                id: lblCalcIntervalDescr
+            Rectangle {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: 14
-                text: qsTr("Интервал вычисления (мсек):")
+                width: lblCalcIntervalDescr.width
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    id: lblCalcIntervalDescr
+                    font.pointSize: 14
+                    text: qsTr("Интервал вычисления (сек):")
+                }
             }
+
             Rectangle {
                 width: sizeSeparatorHorizontal
                 anchors.top: parent.top
@@ -686,11 +799,12 @@ ApplicationWindow {
             }
             TextField {
                 id: editCalcInterval
-                placeholderText: qsTr("10000")
-                anchors.verticalCenter: parent.verticalCenter
+                text: calcInterval
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: (parent.width - sizeSeparatorHorizontal * 4) - lblCalcIntervalDescr.width - btnSetCalcInterval.width
                 focus: true
                 font.pointSize: 14
-                width: (parent.width - sizeSeparatorHorizontal * 4) - lblCalcIntervalDescr.width - btnSetCalcInterval.width
                 verticalAlignment: TextInput.AlignVCenter
                 style: TextFieldStyle {
                     background: Rectangle {
@@ -724,7 +838,7 @@ ApplicationWindow {
                     }
                 }
                 onClicked: {
-                    textPrintLog.append(editCalcInterval.text)
+                    appCore.setCalcTimerInterval(editCalcInterval.text)
                 }
             }
             Rectangle {
@@ -733,9 +847,91 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
             }
         }
-
         Rectangle {
-            id: verticalSeparator9
+            id: verticalSeparator10
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: queuesInfo.top
+            height: sizeSeparatorVertical
+        }
+        Row {
+            id: queuesInfo
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: verticalSeparator11.top
+            height: sizeCalcButtonHeight
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: lblQueueReq.width
+                Text {
+                    id: lblQueueReq
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 14
+                    text: qsTr("Выражений в очереди: ")
+                }
+            }
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: (parent.width - lblQueueReq.width - lblQueueRes.width - sizeSeparatorHorizontal * 5) / 2
+                Text {
+                    id: countQueueReq
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 14
+                    text: "0"
+                }
+            }
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: lblQueueRes.width
+                Text {
+                    id: lblQueueRes
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 14
+                    text: qsTr("Решений в очереди: ")
+                }
+            }
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: (parent.width - lblQueueReq.width - lblQueueRes.width - sizeSeparatorHorizontal * 5) / 2
+                Text {
+                    id: countQueueRes
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 14
+                    text: "0"
+                }
+            }
+            Rectangle {
+                width: sizeSeparatorHorizontal
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+            }
+        }
+        Rectangle {
+            id: verticalSeparator11
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom

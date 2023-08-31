@@ -1,3 +1,4 @@
+
 #include "calculator.h"
 
 Calculator::Calculator() {
@@ -18,14 +19,14 @@ double Calculator::calculateExpression(int typeOper, double operand1, double ope
         break;
     case DIVIDE:
         if (operand2 == 0) {
-            throw "Деление на ноль";
+            throw std::overflow_error("Деление на ноль");
         }
         else {
             result = operand1 / operand2;
         }
         break;
     default:
-        throw "Недопустимый тип операции";
+        throw std::invalid_argument("Недопустимый тип операции");
     }
     return result;
 }

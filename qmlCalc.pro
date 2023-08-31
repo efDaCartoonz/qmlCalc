@@ -3,8 +3,13 @@ TEMPLATE = app
 QT += qml quick widgets
 CONFIG += c++11
 
+INSTALLS += target
+
 SOURCES += main.cpp \
-    appcore.cpp
+    appcore.cpp \
+    calculator.cpp \
+    threadcalc.cpp \
+    threadqueue.cpp
 
 RESOURCES += qml.qrc
 
@@ -15,4 +20,7 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    appcore.h
+    appcore.h \
+    calculator.h \
+    threadcalc.h \
+    threadqueue.h
