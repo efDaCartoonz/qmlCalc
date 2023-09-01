@@ -34,7 +34,7 @@ void ThreadCalc::whenTimerTimeout() {
         bool isError = false;
         for (int i = 0; i < operations->length(); i++) {
             try {
-                result = calc.calculateExpression(operations->at(i), result, operands->at(i+1));
+                result = Calculator::calculateExpression(operations->at(i), result, operands->at(i+1));
             }
             catch (std::exception &e) {
                 mutex->lock();
@@ -53,7 +53,6 @@ void ThreadCalc::whenTimerTimeout() {
             resultCount = appCore->queueResult.length();
             mutex->unlock();
         }
-//        emit finishCalc();
         emit showResultCount(resultCount);
     }
     emit showExpressionCount(expressionCount);

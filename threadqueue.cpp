@@ -73,6 +73,9 @@ void ThreadQueue::whenAddNewSymbol(QString symbol) {
     }
     else {
         expressionValue += symbol;
+        if (expressionValue.length() - checkPosition > 9) {
+            emit showExpressionWarning(QString("Число %1 слишком длинное, возможна потеря точности при вычислении").arg(expressionValue.mid(checkPosition)));
+        }
     }
     emit showExpressionValue(expressionValue);
 }

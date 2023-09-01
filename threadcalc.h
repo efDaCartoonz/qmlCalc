@@ -15,22 +15,18 @@ public:
     explicit ThreadCalc(QObject *parent, QMutex *mutex);
 
 public slots:
-    void run();
-    void whenTimerTimeout();
+    void run();              // запуск обработчика событий
+    void whenTimerTimeout(); // инициализация вычисления
 
 signals:
-    void showExpressionResult(QString expression, double result);
-    void showExpressionError(QString expression, QString strError);
-    void showExpressionCount(int count);
-    void showResultCount(int count);
-    void finishCalc();
+    void showExpressionResult(QString expression, double result);    // отобразить сообщение о успешном результате вычисления
+    void showExpressionError(QString expression, QString strError);  // отобразить сообщение о ошибке при вычислении
+    void showExpressionCount(int count);                             // отобразить длину очереди запросов
+    void showResultCount(int count);                                 // отобразить длину очереди результатов
 
 private:
-    QMutex *mutex;
-    QObject *parent;
-
-    Calculator calc;
-//    QTimer *timer;
+    QObject *parent; // для доступа к контейнерам очередей
+    QMutex *mutex;   // для обеспечении безопасности при работе с данными
 
 private slots:
 };

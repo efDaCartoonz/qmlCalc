@@ -14,7 +14,7 @@ class Calculator
 {
 public:
     Calculator();
-    double calculateExpression(int typeOper, double operand1, double operand2);
+    static double calculateExpression(int typeOper, double operand1, double operand2); // метод для вычисления
 };
 
 #endif // CALCULATOR_H

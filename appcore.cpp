@@ -15,6 +15,7 @@ AppCore::AppCore(QObject *parent, QSettings *settings) : QObject(parent) {
     connect(this, SIGNAL(sendDeleteLast()), threadQueue, SLOT(whenNeedDeleteLastSymbol()));
     connect(this, SIGNAL(sendClearCmd()), threadQueue, SLOT(whenNeedClearExpression()));
     connect(threadQueue, SIGNAL(showExpressionValue(QString)), SLOT(whenNeedShowExpressionValue(QString)));
+    connect(threadQueue, SIGNAL(showExpressionWarning(QString)), SLOT(whenNeedShowExpressionWarning(QString)));
     connect(threadQueue, SIGNAL(showExpressionError(QString)), SLOT(whenNeedShowExpressionError(QString)));
     connect(threadQueue, SIGNAL(showExpressionMessage(QString)), SLOT(whenNeedShowExpressionMessage(QString)));
     connect(threadQueue, SIGNAL(showExpressionCount(int)), SLOT(whenNeedShowExpressionCount(int)));
@@ -57,14 +58,6 @@ void AppCore::setCalcTimerInterval(QString value) {
     }
 }
 
-void AppCore::whenGetReqQueueCount(int count) {
-    emit showRequestQueueCount(count);
-}
-
-void AppCore::whenGetResQueueCount(int count) {
-    emit showResultQueueCount(count);
-}
-
 void AppCore::whenAddNewSymbol(QString symbol) {
     emit sendNewSymol(symbol);
 }
@@ -81,12 +74,16 @@ void AppCore::whenNeedShowExpressionValue(QString value) {
     emit showExpressionValue(value);
 }
 
+void AppCore::whenNeedShowExpressionWarning(QString message) {
+    emit showExpressionWarning(message);
+}
+
 void AppCore::whenNeedShowExpressionError(QString value) {
     emit showError(value);
 }
 
 void AppCore::whenNeedShowExpressionMessage(QString message) {
-    emit showExpression(message);
+    emit showExpressionInQueue(message);
 }
 
 void AppCore::whenNeedShowExpressionCount(int count) {
